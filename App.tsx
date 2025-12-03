@@ -303,11 +303,9 @@ const App: React.FC = () => {
                             </p>
                         </div>
                         <div>
-                            {activeTab === 'vibe' && (
-                                <Button onClick={() => setIsModalOpen(true)} variant="primary" className="text-sm">
-                                    + Submit Vibe Code
-                                </Button>
-                            )}
+                            <Button onClick={() => setIsModalOpen(true)} variant="primary" className="text-sm">
+                                + Submit Vibe Code
+                            </Button>
                         </div>
                     </div>
 
