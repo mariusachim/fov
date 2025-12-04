@@ -188,6 +188,10 @@ const App: React.FC = () => {
     const [apps, setApps] = useState<AppEntry[]>(HARDCODED_APPS);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState<AppStage>('vibe');
+    // Hello API call state
+    const [helloLoading, setHelloLoading] = useState(false);
+    const [helloError, setHelloError] = useState<string | null>(null);
+    const [helloResponse, setHelloResponse] = useState<string | null>(null);
 
     const filteredApps = apps.filter(app => app.stage === activeTab);
 
@@ -303,20 +307,60 @@ const App: React.FC = () => {
                     <FunnelVisualization currentStage={activeTab}/>
 
                     {/* Top Menu Tabs */}
-                    <nav className="flex space-x-1 rounded-xl bg-gray-200 p-1 mb-4 w-full md:w-fit">
-                        {tabs.map((tab) => (
-                            <button
-                                key={tab.id}
-                                onClick={() => setActiveTab(tab.id)}
-                                className={`w-full md:w-auto rounded-lg px-4 py-2 text-sm font-medium leading-5 transition-all
+                    <nav className="flex items-center justify-between gap-2 rounded-xl bg-gray-200 p-1 mb-4 w-full md:w-auto">
+                        <div className="flex space-x-1">
+                            {tabs.map((tab) => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className={`w-full md:w-auto rounded-lg px-4 py-2 text-sm font-medium leading-5 transition-all
                   ${activeTab === tab.id
-                                    ? 'bg-white text-gray-900 shadow'
-                                    : 'text-gray-600 hover:bg-white/[0.12] hover:text-gray-800'
-                                }`}
-                            >
-                                {tab.label}
-                            </button>
-                        ))}
+                                        ? 'bg-white text-gray-900 shadow'
+                                        : 'text-gray-600 hover:bg-white/[0.12] hover:text-gray-800'
+                                    }`}
+                                >
+                                    {tab.label}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* New menu entry: Call Hello API */}
+                        <button
+                            onClick={async () => {
+                                try {
+                                    setHelloLoading(true);
+                                    setHelloError(null);
+                                    setHelloResponse(null);
+                                    const res = await fetch('https://kt3xcknm7l.execute-api.eu-north-1.amazonaws.com/Stage/hello');
+                                    const contentType = res.headers.get('content-type') || '';
+                                    if (!res.ok) {
+                                        throw new Error(`Request failed: ${res.status} ${res.statusText}`);
+                                    }
+                                    if (contentType.includes('application/json')) {
+                                        const data = await res.json();
+                                        setHelloResponse(JSON.stringify(data));
+                                    } else {
+                                        const text = await res.text();
+                                        setHelloResponse(text);
+                                    }
+                                } catch (err: any) {
+                                    setHelloError(err?.message || 'Unknown error');
+                                } finally {
+                                    setHelloLoading(false);
+                                }
+                            }}
+                            className={`rounded-lg px-3 py-2 text-sm font-medium leading-5 transition-all flex items-center gap-2
+                                ${helloLoading ? 'bg-white text-gray-400 cursor-wait' : 'bg-white text-gray-900 hover:shadow'}
+                            `}
+                            title="Call Hello API"
+                        >
+                            {/* Simple link icon */}
+                            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07L10 4"/>
+                                <path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07L14 20"/>
+                            </svg>
+                            {helloLoading ? 'Calling…' : 'Hello API'}
+                        </button>
                     </nav>
 
                     {/* Skills Section */}
@@ -326,6 +370,30 @@ const App: React.FC = () => {
                         <span className="text-sm font-medium text-gray-800">{stageSkills[activeTab]}</span>
                     </div>
                 </header>
+
+                {/* Hello API response panel */}
+                {(helloLoading || helloError || helloResponse) && (
+                    <div className="mb-4">
+                        <div className={`rounded-lg border p-3 text-sm shadow-sm 
+                            ${helloError ? 'bg-red-50 border-red-200 text-red-800' : 'bg-white border-gray-200 text-gray-800'}
+                        `}>
+                            {helloLoading && <div>Loading Hello API…</div>}
+                            {helloError && (
+                                <div>
+                                    <strong>Error:</strong> {helloError}
+                                </div>
+                            )}
+                            {!helloLoading && !helloError && helloResponse && (
+                                <div className="overflow-auto">
+                                    <strong>Response:</strong>
+                                    <pre className="mt-1 whitespace-pre-wrap break-words text-xs bg-gray-50 p-2 rounded border border-gray-100 max-h-64 overflow-auto">
+{helloResponse}
+                                    </pre>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
 
                 {/* List - Compact Design */}
                 <div className="space-y-3">
