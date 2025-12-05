@@ -194,9 +194,9 @@ const App: React.FC = () => {
     const [theme, setTheme] = useState<'light' | 'dark'>(() => {
         try {
             const saved = localStorage.getItem('theme') as 'light' | 'dark' | null;
-            if (saved === 'light' || saved === 'dark') return saved;
-            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            return prefersDark ? 'dark' : 'light';
+            // Default to light unless user explicitly saved dark
+            if (saved === 'dark') return 'dark';
+            return 'light';
         } catch {
             return 'light';
         }

@@ -8,8 +8,8 @@
       // Set theme early to avoid flash
       try {
         const saved = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const theme = saved === 'dark' || (!saved && prefersDark) ? 'dark' : 'light';
+        // Default to light unless user explicitly saved dark
+        const theme = saved === 'dark' ? 'dark' : 'light';
         if (theme === 'dark') {
           document.documentElement.setAttribute('data-theme', 'dark');
         }
