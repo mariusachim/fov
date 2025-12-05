@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { AppEntry } from '../types';
 import { processVibeCheck } from '../services/vibeCheckService';
-import Button from './CyberButton'; // Importing the updated component
 
 interface AddAppModalProps {
   isOpen: boolean;
@@ -134,20 +133,40 @@ const AddAppModal: React.FC<AddAppModalProps> = ({ isOpen, onClose, onAdd }) => 
           </div>
 
           <div className="flex justify-end pt-4 gap-3">
-            <Button 
-              type="button" 
-              variant="secondary" 
+            <button
+              type="button"
               onClick={handleClose}
+              className={[
+                'relative px-4 py-2 font-medium rounded-full transition-all duration-200',
+                'focus:outline-none focus:ring-2 focus:ring-offset-2',
+                'disabled:opacity-50 disabled:cursor-not-allowed',
+                'bg-white/80 text-slate-700 border border-white/60 backdrop-blur hover:bg-white focus:ring-sky-400'
+              ].join(' ')}
             >
               Cancel
-            </Button>
-            <Button 
-              type="submit" 
-              variant="primary"
-              isLoading={isAnalyzing}
+            </button>
+            <button
+              type="submit"
+              disabled={isAnalyzing}
+              className={[
+                'relative px-4 py-2 font-medium rounded-full transition-all duration-200',
+                'focus:outline-none focus:ring-2 focus:ring-offset-2',
+                'disabled:opacity-50 disabled:cursor-not-allowed',
+                'text-white bg-gradient-to-r from-fuchsia-500 to-sky-500 shadow-md hover:shadow-lg focus:ring-fuchsia-400'
+              ].join(' ')}
             >
-              Submit App
-            </Button>
+              {isAnalyzing ? (
+                <span className="flex items-center gap-2">
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Processing...
+                </span>
+              ) : (
+                'Submit App'
+              )}
+            </button>
           </div>
         </form>
       </div>

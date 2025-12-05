@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {AppEntry, AppStage} from './types';
 import AddAppModal from './components/AddAppModal';
-import Button from './components/CyberButton';
 
 const HARDCODED_APPS: AppEntry[] = [
     // Vibe Stage
@@ -276,7 +275,7 @@ const App: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 pb-20">
+        <div className="min-h-screen pb-20">
 
             <div className="container mx-auto px-4 py-6 max-w-5xl">
 
@@ -293,9 +292,20 @@ const App: React.FC = () => {
                             </p>
                         </div>
                         <div>
-                            <Button onClick={() => setIsModalOpen(true)} variant="primary" className="text-sm">
+                            <button
+                                onClick={() => setIsModalOpen(true)}
+                                className={
+                                    [
+                                        'relative px-4 py-2 font-medium rounded-full transition-all duration-200',
+                                        'focus:outline-none focus:ring-2 focus:ring-offset-2',
+                                        'disabled:opacity-50 disabled:cursor-not-allowed',
+                                        'text-white bg-gradient-to-r from-fuchsia-500 to-sky-500 shadow-md hover:shadow-lg focus:ring-fuchsia-400',
+                                        'text-sm'
+                                    ].join(' ')
+                                }
+                            >
                                 + Submit Vibe Code
-                            </Button>
+                            </button>
                         </div>
                     </div>
 
@@ -303,15 +313,15 @@ const App: React.FC = () => {
                     <FunnelVisualization currentStage={activeTab}/>
 
                     {/* Top Menu Tabs */}
-                    <nav className="flex space-x-1 rounded-xl bg-gray-200 p-1 mb-4 w-full md:w-fit">
+                    <nav className="flex space-x-1 rounded-xl bg-white/60 backdrop-blur border border-white/50 p-1 mb-4 w-full md:w-fit">
                         {tabs.map((tab) => (
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
                                 className={`w-full md:w-auto rounded-lg px-4 py-2 text-sm font-medium leading-5 transition-all
                   ${activeTab === tab.id
-                                    ? 'bg-white text-gray-900 shadow'
-                                    : 'text-gray-600 hover:bg-white/[0.12] hover:text-gray-800'
+                                    ? 'bg-white/80 text-slate-900 shadow'
+                                    : 'text-slate-700 hover:bg-white/50 hover:text-slate-900'
                                 }`}
                             >
                                 {tab.label}
@@ -321,9 +331,9 @@ const App: React.FC = () => {
 
                     {/* Skills Section */}
                     <div
-                        className="mb-6 bg-white border border-gray-200 rounded-lg p-3 shadow-sm inline-flex items-center gap-3">
-                        <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Skills:</span>
-                        <span className="text-sm font-medium text-gray-800">{stageSkills[activeTab]}</span>
+                        className="mb-6 glass-card p-3 inline-flex items-center gap-3">
+                        <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Skills:</span>
+                        <span className="text-sm font-medium text-slate-800">{stageSkills[activeTab]}</span>
                     </div>
                 </header>
 
@@ -331,7 +341,7 @@ const App: React.FC = () => {
                 <div className="space-y-3">
                     {sortedApps.length === 0 ? (
                         <div
-                            className="text-center py-12 text-gray-500 bg-white rounded-lg border border-dashed border-gray-300">
+                            className="text-center py-12 text-slate-600 glass-card rounded-lg border border-dashed border-white/60">
                             No apps in this stage yet.
                         </div>
                     ) : (
@@ -340,7 +350,7 @@ const App: React.FC = () => {
                             return (
                                 <div
                                     key={app.id}
-                                    className="group bg-white p-3 sm:p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+                                    className="group glass-card p-3 sm:p-4 hover:shadow-md transition-shadow"
                                 >
                                     <div className="flex flex-col sm:flex-row gap-3 sm:items-center justify-between">
 
@@ -349,9 +359,9 @@ const App: React.FC = () => {
                                             <div className="flex items-center gap-2 mb-1">
                                                 <span
                                                     className="text-gray-400 font-mono text-xs w-5 flex-shrink-0">#{index + 1}</span>
-                                                <h3 className="text-base font-bold text-gray-900 truncate">
+                                                <h3 className="text-base font-bold text-slate-900 truncate">
                                                     <a href={app.link} target="_blank" rel="noopener noreferrer"
-                                                       className="hover:text-blue-600 transition-colors">
+                                                       className="hover:text-fuchsia-600 transition-colors">
                                                         {app.name}
                                                     </a>
                                                 </h3>
@@ -366,12 +376,12 @@ const App: React.FC = () => {
                           </span>
                                             </div>
 
-                                            <p className="text-xs text-gray-600 truncate mb-1.5">
+                                            <p className="text-xs text-slate-700 truncate mb-1.5">
                                                 {app.description}
                                             </p>
 
-                                            <div className="flex items-center gap-3 text-[10px] text-gray-400">
-                                                <span className="font-medium text-gray-600">{app.author}</span>
+                                            <div className="flex items-center gap-3 text-[10px] text-slate-400">
+                                                <span className="font-medium text-slate-600">{app.author}</span>
                                                 <span>•</span>
                                                 <span>{new Date(app.timestamp).toLocaleDateString()}</span>
                                             </div>
@@ -398,7 +408,7 @@ const App: React.FC = () => {
                                                 href={app.link}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded text-xs font-medium transition-all"
+                                                className="px-3 py-1 bg-white/70 hover:bg-white text-slate-700 rounded text-xs font-medium transition-all"
                                             >
                                                 Visit
                                             </a>
@@ -406,7 +416,7 @@ const App: React.FC = () => {
                                                 href="https://github.com/funnel-of-vibes/fov"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded text-xs font-medium transition-all"
+                                                className="px-3 py-1 bg-white/70 hover:bg-white text-slate-700 rounded text-xs font-medium transition-all"
                                                 aria-label={`View source code for ${app.name}`}
                                             >
                                                 Source
@@ -422,7 +432,7 @@ const App: React.FC = () => {
 
                 {/* Footer */}
                 <footer className="mt-12 text-center text-gray-400 text-xs">
-                    <p>© {new Date().getFullYear()} Vibe Coded Community</p>
+                    <p>© 2025 FunnelOfVibes. All rights reserved.</p>
                 </footer>
 
             </div>
