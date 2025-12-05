@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { googleLogout } from '@react-oauth/google';
 import {AppEntry, AppStage} from './types';
 import AddAppModal from './components/AddAppModal';
@@ -11,7 +11,7 @@ const HARDCODED_APPS: AppEntry[] = [
         name: 'Homo Agenticus',
         link: 'http://homo.agenticus.eu',
         author: 'The_Architect',
-        likes: 0,
+        likes: 2,
         vibeScore: 99,
         description: 'Autonomous agentic humans who make informed decisions',
         timestamp: Date.now() - 10000000,
@@ -22,7 +22,7 @@ const HARDCODED_APPS: AppEntry[] = [
         name: 'Vibes 4 Humanity',
         link: 'http://vibes4humanity.agenticus.eu',
         author: 'The_Master_Viber',
-        likes: 0,
+        likes: 1,
         vibeScore: 99,
         contributors: 1,
         description: 'Choose your future job',
@@ -191,6 +191,28 @@ const App: React.FC = () => {
     const [apps, setApps] = useState<AppEntry[]>(HARDCODED_APPS);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState<AppStage>('vibe');
+    const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+        try {
+            const saved = localStorage.getItem('theme') as 'light' | 'dark' | null;
+            if (saved === 'light' || saved === 'dark') return saved;
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            return prefersDark ? 'dark' : 'light';
+        } catch {
+            return 'light';
+        }
+    });
+
+    useEffect(() => {
+        try { localStorage.setItem('theme', theme); } catch {}
+        const root = document.documentElement;
+        if (theme === 'dark') {
+            root.setAttribute('data-theme', 'dark');
+        } else {
+            root.removeAttribute('data-theme');
+        }
+    }, [theme]);
+
+    const toggleTheme = () => setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
 
     const handleSignOut = () => {
         try {
@@ -257,7 +279,7 @@ const App: React.FC = () => {
 
     const stageSkills: Record<AppStage, string> = {
         vibe: "Mother tongue",
-        building: "Frontend, Backend, DB",
+        building: "Frontend, Backend, DB, ...",
         scaling: "Old School Software Development, but a lost faster and cheaper"
     };
 
@@ -328,6 +350,32 @@ const App: React.FC = () => {
                                     {lang.toUpperCase()}
                                 </button>
                             </div>
+                            {/* Theme toggle */}
+                            <button
+                                onClick={toggleTheme}
+                                className="theme-toggle px-2 py-1 rounded text-xs border bg-white text-slate-800 border-slate-300"
+                                title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+                                aria-label="Toggle theme"
+                            >
+                                {theme === 'dark' ? (
+                                    <span className="inline-flex items-center gap-1">
+                                        {/* Moon icon */}
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+                                        </svg>
+                                        Dark
+                                    </span>
+                                ) : (
+                                    <span className="inline-flex items-center gap-1">
+                                        {/* Sun icon */}
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zM1 13h3v-2H1v2zm10 10h2v-3h-2v3zm9-10v2h3v-2h-3zm-1.95 7.95l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM13 1h-2v3h2V1zm4.24 3.05l1.79-1.8-1.41-1.41-1.8 1.79 1.42 1.42zM4.22 18.36l-1.8 1.79 1.41 1.41 1.79-1.8-1.4-1.4z"/>
+                                            <circle cx="12" cy="12" r="5" />
+                                        </svg>
+                                        Light
+                                    </span>
+                                )}
+                            </button>
                             {/* Sign Out button placed to the left of Submit */}
                             <button
                                 onClick={handleSignOut}
@@ -367,9 +415,10 @@ const App: React.FC = () => {
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                className={`w-full md:w-auto rounded-lg px-4 py-2 text-sm font-medium leading-5 transition-all
+                                aria-current={activeTab === tab.id ? 'page' : undefined}
+                                className={`tab-btn w-full md:w-auto rounded-lg px-4 py-2 text-sm font-medium leading-5 transition-all
                   ${activeTab === tab.id
-                                    ? 'bg-white/80 text-slate-900 shadow'
+                                    ? 'tab-btn--active bg-white/80 text-slate-900 shadow'
                                     : 'text-slate-700 hover:bg-white/50 hover:text-slate-900'
                                 }`}
                             >
