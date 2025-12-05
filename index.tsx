@@ -26,7 +26,16 @@ function AuthGate() {
   });
 
   useEffect(() => {
-    const onLogin = () => setIsAuthed(true);
+    const onLogin = () => {
+      // Ensure the app shows from the very top after login on any device
+      try {
+        if ('scrollRestoration' in history) {
+          history.scrollRestoration = 'manual';
+        }
+      } catch {}
+      try { window.scrollTo(0, 0); } catch {}
+      setIsAuthed(true);
+    };
     window.addEventListener('google:login_success', onLogin as EventListener);
     return () => window.removeEventListener('google:login_success', onLogin as EventListener);
   }, []);
@@ -37,6 +46,18 @@ function AuthGate() {
     window.addEventListener('google:logout', onLogout as EventListener);
     return () => window.removeEventListener('google:logout', onLogout as EventListener);
   }, []);
+
+  // When already authenticated (e.g., returning users), ensure we start at top
+  useEffect(() => {
+    if (isAuthed) {
+      try {
+        if ('scrollRestoration' in history) {
+          history.scrollRestoration = 'manual';
+        }
+      } catch {}
+      try { window.scrollTo(0, 0); } catch {}
+    }
+  }, [isAuthed]);
 
   if (!isAuthed) {
     return <SignIn />;
