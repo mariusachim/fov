@@ -1,4 +1,4 @@
-export type AppStage = 'vibe' | 'building' | 'scaling';
+export type AppStage = 'vibe' | 'building' | 'scaling' | 'supabase';
 
 export interface AppEntry {
   id: string;

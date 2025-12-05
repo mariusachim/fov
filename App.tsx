@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {AppEntry, AppStage} from './types';
 import AddAppModal from './components/AddAppModal';
 import Button from './components/CyberButton';
+import SupabaseTesting from './components/SupabaseTesting';
 
 const HARDCODED_APPS: AppEntry[] = [
     // Vibe Stage
@@ -235,12 +236,14 @@ const App: React.FC = () => {
         {id: 'vibe', label: 'Vibes'},
         {id: 'building', label: 'Building'},
         {id: 'scaling', label: 'Scaling'},
+        {id: 'supabase', label: 'supabase'},
     ];
 
     const stageSkills: Record<AppStage, string> = {
         vibe: "English",
         building: "Frontend, Backend, DB",
-        scaling: "Old School Software Development, but a lost faster and cheaper"
+        scaling: "Old School Software Development, but a lost faster and cheaper",
+        supabase: "Fetching data from Supabase PostgREST"
     };
 
     // Icon config
@@ -327,98 +330,102 @@ const App: React.FC = () => {
                     </div>
                 </header>
 
-                {/* List - Compact Design */}
-                <div className="space-y-3">
-                    {sortedApps.length === 0 ? (
-                        <div
-                            className="text-center py-12 text-gray-500 bg-white rounded-lg border border-dashed border-gray-300">
-                            No apps in this stage yet.
-                        </div>
-                    ) : (
-                        sortedApps.map((app, index) => {
-                            const metricValue = getAppMetric(app, activeTab);
-                            return (
-                                <div
-                                    key={app.id}
-                                    className="group bg-white p-3 sm:p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
-                                >
-                                    <div className="flex flex-col sm:flex-row gap-3 sm:items-center justify-between">
+                {/* Content */}
+                {activeTab === 'supabase' ? (
+                    <SupabaseTesting />
+                ) : (
+                    <div className="space-y-3">
+                        {sortedApps.length === 0 ? (
+                            <div
+                                className="text-center py-12 text-gray-500 bg-white rounded-lg border border-dashed border-gray-300">
+                                No apps in this stage yet.
+                            </div>
+                        ) : (
+                            sortedApps.map((app, index) => {
+                                const metricValue = getAppMetric(app, activeTab);
+                                return (
+                                    <div
+                                        key={app.id}
+                                        className="group bg-white p-3 sm:p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+                                    >
+                                        <div className="flex flex-col sm:flex-row gap-3 sm:items-center justify-between">
 
-                                        {/* Left Section: Info */}
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <span
-                                                    className="text-gray-400 font-mono text-xs w-5 flex-shrink-0">#{index + 1}</span>
-                                                <h3 className="text-base font-bold text-gray-900 truncate">
-                                                    <a href={app.link} target="_blank" rel="noopener noreferrer"
-                                                       className="hover:text-blue-600 transition-colors">
-                                                        {app.name}
-                                                    </a>
-                                                </h3>
-                                                {/* Vibe Badge */}
-                                                <span
-                                                    className={`px-1.5 py-0.5 text-[10px] font-semibold rounded uppercase tracking-wide flex-shrink-0 ${
-                                                        app.vibeScore >= 90 ? 'bg-green-100 text-green-800' :
-                                                            app.vibeScore >= 70 ? 'bg-blue-100 text-blue-800' :
-                                                                'bg-gray-100 text-gray-800'
-                                                    }`}>
-                            {app.vibeScore} Vibe
-                          </span>
+                                            {/* Left Section: Info */}
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <span
+                                                        className="text-gray-400 font-mono text-xs w-5 flex-shrink-0">#{index + 1}</span>
+                                                    <h3 className="text-base font-bold text-gray-900 truncate">
+                                                        <a href={app.link} target="_blank" rel="noopener noreferrer"
+                                                           className="hover:text-blue-600 transition-colors">
+                                                            {app.name}
+                                                        </a>
+                                                    </h3>
+                                                    {/* Vibe Badge */}
+                                                    <span
+                                                        className={`px-1.5 py-0.5 text-[10px] font-semibold rounded uppercase tracking-wide flex-shrink-0 ${
+                                                            app.vibeScore >= 90 ? 'bg-green-100 text-green-800' :
+                                                                app.vibeScore >= 70 ? 'bg-blue-100 text-blue-800' :
+                                                                    'bg-gray-100 text-gray-800'
+                                                        }`}>
+                                                    {app.vibeScore} Vibe
+                                                  </span>
+                                                </div>
+
+                                                <p className="text-xs text-gray-600 truncate mb-1.5">
+                                                    {app.description}
+                                                </p>
+
+                                                <div className="flex items-center gap-3 text-[10px] text-gray-400">
+                                                    <span className="font-medium text-gray-600">{app.author}</span>
+                                                    <span>•</span>
+                                                    <span>{new Date(app.timestamp).toLocaleDateString()}</span>
+                                                </div>
                                             </div>
 
-                                            <p className="text-xs text-gray-600 truncate mb-1.5">
-                                                {app.description}
-                                            </p>
+                                            {/* Right Section: Actions */}
+                                            <div className="flex items-center gap-3 mt-2 sm:mt-0 pl-7 sm:pl-0">
+                                                <button
+                                                    onClick={() => toggleLike(app.id)}
+                                                    className={`flex items-center gap-1.5 group/btn px-2 py-1 rounded hover:bg-gray-50 transition-colors ${
+                                                        activeTab === 'vibe' && metricValue > 0 ? 'text-red-500' :
+                                                            activeTab === 'building' ? 'text-blue-600' :
+                                                                activeTab === 'scaling' ? 'text-green-600' : 'text-gray-400'
+                                                    }`}
+                                                >
+                                                    {getStageIcon(activeTab)}
+                                                    <span
+                                                        className="text-xs font-semibold text-gray-700 min-w-[2rem] text-right">
+                                                       {metricValue.toLocaleString()}
+                                                     </span>
+                                                </button>
 
-                                            <div className="flex items-center gap-3 text-[10px] text-gray-400">
-                                                <span className="font-medium text-gray-600">{app.author}</span>
-                                                <span>•</span>
-                                                <span>{new Date(app.timestamp).toLocaleDateString()}</span>
+                                                <a
+                                                    href={app.link}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded text-xs font-medium transition-all"
+                                                >
+                                                    Visit
+                                                </a>
+                                                <a
+                                                    href="https://github.com/funnel-of-vibes/fov"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded text-xs font-medium transition-all"
+                                                    aria-label={`View source code for ${app.name}`}
+                                                >
+                                                    Source
+                                                </a>
                                             </div>
+
                                         </div>
-
-                                        {/* Right Section: Actions */}
-                                        <div className="flex items-center gap-3 mt-2 sm:mt-0 pl-7 sm:pl-0">
-                                            <button
-                                                onClick={() => toggleLike(app.id)}
-                                                className={`flex items-center gap-1.5 group/btn px-2 py-1 rounded hover:bg-gray-50 transition-colors ${
-                                                    activeTab === 'vibe' && metricValue > 0 ? 'text-red-500' :
-                                                        activeTab === 'building' ? 'text-blue-600' :
-                                                            activeTab === 'scaling' ? 'text-green-600' : 'text-gray-400'
-                                                }`}
-                                            >
-                                                {getStageIcon(activeTab)}
-                                                <span
-                                                    className="text-xs font-semibold text-gray-700 min-w-[2rem] text-right">
-                               {metricValue.toLocaleString()}
-                             </span>
-                                            </button>
-
-                                            <a
-                                                href={app.link}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded text-xs font-medium transition-all"
-                                            >
-                                                Visit
-                                            </a>
-                                            <a
-                                                href="https://github.com/funnel-of-vibes/fov"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded text-xs font-medium transition-all"
-                                                aria-label={`View source code for ${app.name}`}
-                                            >
-                                                Source
-                                            </a>
-                                        </div>
-
                                     </div>
-                                </div>
-                            );
-                        })
-                    )}
-                </div>
+                                );
+                            })
+                        )}
+                    </div>
+                )}
 
                 {/* Footer */}
                 <footer className="mt-12 text-center text-gray-400 text-xs">
