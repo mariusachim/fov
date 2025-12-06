@@ -61,7 +61,7 @@ const SignIn: React.FC = () => {
       <div className="mx-auto max-w-6xl px-4 py-8 sm:py-12">
         <div className="grid grid-cols-1 gap-6 items-stretch">
           {/* Info / Marketing Panel */}
-          <div className="relative overflow-hidden rounded-2xl border border-white/40 bg-white/50 backdrop-blur shadow-md p-6 sm:p-8">
+          <div className="relative overflow-hidden rounded-2xl border border-white/40 bg-white/60 backdrop-blur shadow-md p-6 sm:p-8">
             <div className="absolute inset-0 pointer-events-none" aria-hidden>
               <div className="absolute -top-20 -left-16 h-56 w-56 rounded-full bg-fuchsia-300/30 blur-3xl"></div>
               <div className="absolute -bottom-16 -right-10 h-56 w-56 rounded-full bg-sky-300/30 blur-3xl"></div>

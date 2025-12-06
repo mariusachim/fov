@@ -77,8 +77,11 @@ a:hover{ text-decoration: underline; }
 [data-theme="dark"] .text-slate-600 { color: #cbd5e1 !important; }
 [data-theme="dark"] .bg-white { background-color: rgba(17,24,39,0.9) !important; }
 [data-theme="dark"] .bg-white\/80 { background-color: rgba(17,24,39,0.8) !important; }
+[data-theme="dark"] .bg-white\/70 { background-color: rgba(17,24,39,0.7) !important; }
 [data-theme="dark"] .bg-white\/60 { background-color: rgba(17,24,39,0.6) !important; }
 [data-theme="dark"] .border-white\/50 { border-color: rgba(148,163,184,0.25) !important; }
+[data-theme="dark"] .border-slate-200 { border-color: rgba(148,163,184,0.25) !important; }
+[data-theme="dark"] .border-slate-300 { border-color: rgba(148,163,184,0.3) !important; }
 [data-theme="dark"] .border { border-color: rgba(148,163,184,0.3) !important; }
 [data-theme="dark"] .shadow, [data-theme="dark"] .shadow-md, [data-theme="dark"] .shadow-lg { box-shadow: 0 8px 24px rgba(0,0,0,0.35) !important; }
 
@@ -100,6 +103,10 @@ a:hover{ text-decoration: underline; }
   outline: 2px solid rgba(56,189,248,0.5);
   outline-offset: 2px;
 }
+
+/* Dark theme: make common light hover utilities appropriate on dark bg */
+[data-theme="dark"] .hover\:bg-white:hover { background-color: rgba(255,255,255,0.06) !important; }
+[data-theme="dark"] .hover\:bg-slate-50:hover { background-color: rgba(255,255,255,0.06) !important; }
 
 /* Themed button baseline if needed outside Tailwind utilities */
 .theme-button {
