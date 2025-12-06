@@ -74,13 +74,24 @@ const FunnelVisualization: React.FC<{ currentStage: AppStage }> = ({currentStage
         <>
             {/* Desktop Version */}
             <div className="w-full max-w-3xl mx-auto mb-8 hidden sm:block">
-                <svg viewBox="0 0 800 160" className="w-full h-auto drop-shadow-sm">
+                <svg
+                    viewBox="0 0 800 160"
+                    className="w-full h-auto drop-shadow-sm"
+                    style={{
+                        fontFamily:
+                            "'Poppins', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji'",
+                    }}
+                >
                     {/* VIBE STAGE */}
                     <g transform="translate(0,0)" className="transition-opacity duration-300"
                        style={{opacity: currentStage === 'vibe' ? 1 : 0.5}}>
-                        {/* Funnel Part 1: Wide to narrower */}
-                        <path d="M10 10 L260 30 L260 130 L10 150 Z" className="fill-pink-50 stroke-pink-200"
-                              strokeWidth="2"/>
+                        {/* Funnel Part 1: Wide to narrower (rounded corners) */}
+                        <path
+                            d="M10 20 Q 10 10 20 10.8 L 250.05 29.2 Q 260 30 260 40 L 260 120 Q 260 130 250.05 130.8 L 19.95 149.2 Q 10 150 10 140 L 10 20 Z"
+                            className="fill-pink-50 stroke-pink-200"
+                            strokeWidth="2"
+                            strokeLinejoin="round"
+                        />
                         <text x="135" y="115" textAnchor="middle"
                               className="fill-pink-800 text-sm font-bold uppercase tracking-wider"
                               style={{fontSize: '14px'}}>{t('funnel.vibeChecking')}
@@ -98,9 +109,13 @@ const FunnelVisualization: React.FC<{ currentStage: AppStage }> = ({currentStage
                     {/* BUILDING STAGE - Blue Wrench Theme */}
                     <g transform="translate(290,0)" className="transition-opacity duration-300"
                        style={{opacity: currentStage === 'building' ? 1 : 0.5}}>
-                        {/* Funnel Part 2: Narrower to more narrow */}
-                        <path d="M0 30 L250 50 L250 110 L0 130 Z" className="fill-blue-50 stroke-blue-200"
-                              strokeWidth="2"/>
+                        {/* Funnel Part 2: Narrower to more narrow (rounded corners) */}
+                        <path
+                            d="M0 40 Q 0 30 9.95 30.8 L 240.05 49.2 Q 250 50 250 60 L 250 100 Q 250 110 240.05 110.8 L 9.95 129.2 Q 0 130 0 120 L 0 40 Z"
+                            className="fill-blue-50 stroke-blue-200"
+                            strokeWidth="2"
+                            strokeLinejoin="round"
+                        />
                         <text x="125" y="100" textAnchor="middle"
                               className="fill-blue-800 text-sm font-bold uppercase tracking-wider"
                               style={{fontSize: '14px'}}>{t('funnel.building')}
@@ -119,9 +134,13 @@ const FunnelVisualization: React.FC<{ currentStage: AppStage }> = ({currentStage
                     {/* SCALING STAGE */}
                     <g transform="translate(570,0)" className="transition-opacity duration-300"
                        style={{opacity: currentStage === 'scaling' ? 1 : 0.5}}>
-                        {/* Funnel Part 3: Pipe/Tube */}
-                        <path d="M0 50 L220 60 L220 100 L0 110 Z" className="fill-green-50 stroke-green-200"
-                              strokeWidth="2"/>
+                        {/* Funnel Part 3: Pipe/Tube (rounded corners) */}
+                        <path
+                            d="M0 60 Q 0 50 9.98 50.45 L 210.02 59.55 Q 220 60 220 70 L 220 90 Q 220 100 210.02 100.45 L 9.98 109.55 Q 0 110 0 100 L 0 60 Z"
+                            className="fill-green-50 stroke-green-200"
+                            strokeWidth="2"
+                            strokeLinejoin="round"
+                        />
                         <text x="110" y="90" textAnchor="middle"
                               className="fill-green-800 text-sm font-bold uppercase tracking-wider"
                               style={{fontSize: '14px'}}>{t('funnel.scaling')}
@@ -137,21 +156,34 @@ const FunnelVisualization: React.FC<{ currentStage: AppStage }> = ({currentStage
 
             {/* Mobile Simplified Version - Top Right Absolute */}
             <div className="absolute top-0 right-0 sm:hidden opacity-90 p-1">
-                <svg width="80" height="40" viewBox="0 0 120 60" className="drop-shadow-sm">
-                    {/* Vibe */}
-                    <path d="M2 5 L40 12 L40 48 L2 55 Z"
-                          className={`stroke-pink-200 transition-colors duration-300 ${currentStage === 'vibe' ? 'fill-pink-100 stroke-pink-400' : 'fill-white'}`}
-                          strokeWidth="2"
-                          style={{opacity: currentStage === 'vibe' ? 1 : 0.5}}
+                <svg
+                    width="80"
+                    height="40"
+                    viewBox="0 0 120 60"
+                    className="drop-shadow-sm"
+                    style={{
+                        fontFamily:
+                            "'Poppins', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji'",
+                    }}
+                >
+                    {/* Vibe (rounded corners) */}
+                    <path
+                        d="M2 8 Q 2 5 4.95 5.54 L 37.05 11.46 Q 40 12 40 15 L 40 45 Q 40 48 37.05 48.54 L 4.95 54.46 Q 2 55 2 52 L 2 8 Z"
+                        className={`stroke-pink-200 transition-colors duration-300 ${currentStage === 'vibe' ? 'fill-pink-100 stroke-pink-400' : 'fill-white'}`}
+                        strokeWidth="2"
+                        strokeLinejoin="round"
+                        style={{opacity: currentStage === 'vibe' ? 1 : 0.5}}
                     />
-                    {/* Building - Blue */}
-                    <path d="M44 12 L78 18 L78 42 L44 48 Z"
-                          className={`stroke-blue-200 transition-colors duration-300 ${currentStage === 'building' ? 'fill-blue-100 stroke-blue-400' : 'fill-white'}`}
-                          strokeWidth="2"
-                          style={{opacity: currentStage === 'building' ? 1 : 0.5}}
+                    {/* Building - Blue (rounded corners) */}
+                    <path
+                        d="M44 15 Q 44 12 46.96 12.52 L 75.04 17.48 Q 78 18 78 21 L 78 39 Q 78 42 75.04 42.52 L 46.96 47.48 Q 44 48 44 45 L 44 15 Z"
+                        className={`stroke-blue-200 transition-colors duration-300 ${currentStage === 'building' ? 'fill-blue-100 stroke-blue-400' : 'fill-white'}`}
+                        strokeWidth="2"
+                        strokeLinejoin="round"
+                        style={{opacity: currentStage === 'building' ? 1 : 0.5}}
                     />
-                    {/* Scaling */}
-                    <path d="M82 18 L118 18 L118 42 L82 42 Z"
+                    {/* Scaling (rounded corners) */}
+                    <rect x="82" y="18" width="36" height="24" rx="3" ry="3"
                           className={`stroke-green-200 transition-colors duration-300 ${currentStage === 'scaling' ? 'fill-green-100 stroke-green-400' : 'fill-white'}`}
                           strokeWidth="2"
                           style={{opacity: currentStage === 'scaling' ? 1 : 0.5}}
