@@ -24,7 +24,7 @@ const translations: Record<Lang, Dict> = {
     'signin.disclaimer': 'Disclaimer:',
     'signin.disclaimer_text': 'Application intended as a proof of concept.',
     'signin.badge': 'Open community experiment',
-    'signin.marketing': 'A place used to turn simple vibes into real software which improves the lives of humans.',
+    'signin.marketing': ' Goal is to convert vibed code into real software products. How far we can go <b>without paying a cent</b>?',
     'signin.anon': 'Vibe anonymously',
     'signin.openInBrowser': 'Open in browser for Google sign-in',
     'signin.examples.title': 'Examples of vibed apps',
@@ -68,7 +68,7 @@ const translations: Record<Lang, Dict> = {
     'signin.disclaimer': 'Declinarea răspunderii:',
     'signin.disclaimer_text': 'Aplicație destinată ca dovadă de concept.',
     'signin.badge': 'Experiment comunitar deschis',
-    'signin.marketing': 'Un loc folosit pentru a transforma viburile simple în software real care îmbunătățește viața oamenilor.',
+    'signin.marketing': 'Scopul este de a transforma codul generat din vibes în software util. Cât de departe putem ajunge <b>pe gratis</b>? ',
     'signin.anon': 'Vibe anonim',
     'signin.openInBrowser': 'Deschide în browser pentru autentificarea Google',
     'signin.examples.title': 'Exemple de aplicații vibate',
@@ -99,6 +99,8 @@ type I18nContextType = {
   lang: Lang;
   setLang: (l: Lang) => void;
   t: (key: string) => string;
+  // Rich translation that supports a tiny subset of inline markup: <b> and <i>
+  tr: (key: string) => React.ReactNode;
 };
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
@@ -119,6 +121,61 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const setLang = (l: Lang) => setLangState(l);
 
+  // Very small and safe renderer that only allows <b> and <i> tags.
+  // Everything else is treated as plain text. No attributes are supported.
+  function renderRich(input: string): React.ReactNode {
+    // Tokenize by tags <b>, </b>, <i>, </i>
+    const tokens = input.split(/(<\/?[bi]>)/g).filter(Boolean);
+    type Node = { type: 'text' | 'b' | 'i'; children?: Node[]; text?: string };
+    const root: Node = { type: 'text', children: [] };
+    const stack: Node[] = [root];
+
+    const pushText = (txt: string) => {
+      if (!txt) return;
+      const current = stack[stack.length - 1];
+      current.children!.push({ type: 'text', text: txt });
+    };
+
+    for (const tok of tokens) {
+      if (tok === '<b>') {
+        const node: Node = { type: 'b', children: [] };
+        stack[stack.length - 1].children!.push(node);
+        stack.push(node);
+      } else if (tok === '</b>') {
+        if (stack.length > 1 && stack[stack.length - 1].type === 'b') stack.pop();
+        else pushText(tok); // Unbalanced, treat as text
+      } else if (tok === '<i>') {
+        const node: Node = { type: 'i', children: [] };
+        stack[stack.length - 1].children!.push(node);
+        stack.push(node);
+      } else if (tok === '</i>') {
+        if (stack.length > 1 && stack[stack.length - 1].type === 'i') stack.pop();
+        else pushText(tok);
+      } else {
+        pushText(tok);
+      }
+    }
+
+    // Close any unclosed tags implicitly
+    while (stack.length > 1) stack.pop();
+
+    // Convert to React nodes
+    let keyCounter = 0;
+    const toReact = (node: Node): React.ReactNode => {
+      if (node.type === 'text') {
+        if (node.text !== undefined) return node.text;
+        return node.children!.map((c) => toReact(c));
+      }
+      const children = node.children!.map((c) => toReact(c));
+      if (node.type === 'b') return React.createElement('strong', { key: keyCounter++ }, children);
+      if (node.type === 'i') return React.createElement('em', { key: keyCounter++ }, children);
+      return children;
+    };
+
+    // Wrap in a fragment to avoid extra DOM when multiple top-level nodes
+    return React.createElement(React.Fragment, null, ...(root.children || []).map((c) => toReact(c)));
+  }
+
   const t = useMemo(() => {
     return (key: string) => {
       const dict = translations[lang] as Dict;
@@ -127,7 +184,11 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     };
   }, [lang]);
 
-  const value = useMemo(() => ({ lang, setLang, t }), [lang, setLang, t]);
+  const tr = useMemo(() => {
+    return (key: string) => renderRich(t(key));
+  }, [t]);
+
+  const value = useMemo(() => ({ lang, setLang, t, tr }), [lang, setLang, t, tr]);
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 };
 

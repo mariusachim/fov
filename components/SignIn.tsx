@@ -7,7 +7,7 @@ const Section: React.FC<{
   children: React.ReactNode;
   defaultOpen?: boolean;
 }> = ({ title, children, defaultOpen = false }) => {
-  const { t } = useI18n();
+  const { t, tr } = useI18n();
   const [open, setOpen] = useState<boolean>(defaultOpen);
   return (
     <div className="mb-3">
@@ -31,7 +31,7 @@ const Section: React.FC<{
 // In-app browser detection removed since Google sign-in is disabled for now
 
 const SignIn: React.FC = () => {
-  const { t } = useI18n();
+  const { t, tr } = useI18n();
   const [error, setError] = useState<string | null>(null);
   // Use the provided PNG asset for the anonymous button icon
   const anonIcon = new URL('./icons/anonymous.png', import.meta.url).href;
@@ -73,7 +73,7 @@ const SignIn: React.FC = () => {
               </div>
               <h1 className="mt-4 text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">{t('app.title')}</h1>
               <p className="mt-2 text-slate-700 text-base sm:text-lg">
-                {t('signin.marketing')}
+                {tr('signin.marketing')}
               </p>
 
               <div className="mt-6">
