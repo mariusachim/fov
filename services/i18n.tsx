@@ -29,7 +29,7 @@ const translations: Record<Lang, Dict> = {
     'signin.openInBrowser': 'Open in browser for Google sign-in',
     'signin.examples.title': 'Examples of vibed apps',
     'signin.examples.subtitle': 'Explore a couple of live examples created by vibers:',
-    'section.glossary': 'Glossary of terms',
+    'section.glossary': 'Concept',
     'section.show': 'Show',
     'section.hide': 'Hide',
     'glossary.viber': '<b>Viber</b> — idealistic human manifesting some vibes directed to helping fellow humans.<br>' +
@@ -37,8 +37,6 @@ const translations: Record<Lang, Dict> = {
         'The viber believes that crafting and using software should be basically free of charge.<br>' +
         'The viber understands that maintaining the software may however incur some costs.',
     'glossary.funnel': '<b>Funnel of vibes</b> — a platform intended for the viber community. It is about contributing to take the initial vibe all the way to being a real working application.',
-    'glossary.genai': '<b>GenAI coding assistant</b> — generative AI model capable of generating code based on viber prompts.',
-    'glossary.prompt': '<b>Prompt</b> — the request made by the viber to a GenAI model to produce or change source code.',
     'glossary.builder': '<b>Builder</b> — Viber with software development skills. Not all vibers are builders, but they can develop the skills to become one.',
     'glossary.scaler': '<b>Scaler</b> — Viber with advanced software development skills. Not all builders are scalers, but they can develop the skills to become one.',
     'section.how': 'How it works',
@@ -77,7 +75,7 @@ const translations: Record<Lang, Dict> = {
     'signin.openInBrowser': 'Deschide în browser pentru autentificarea Google',
     'signin.examples.title': 'Exemple de aplicații vibate',
     'signin.examples.subtitle': 'Explorează câteva exemple live create de vibers:',
-    'section.glossary': 'Glosar de termeni',
+    'section.glossary': 'Concept',
     'section.show': 'Arată',
     'section.hide': 'Ascunde',
     'glossary.viber': '<b>Viber</b> — persoană idealist care manifestă viburi îndreptate spre a ajuta alți oameni.<br>' +
@@ -85,8 +83,6 @@ const translations: Record<Lang, Dict> = {
         'Viberul crede că realizarea și folosirea soft-ului nu trebuie să îl coste nimic.<br>' +
         'Viberul înțelege însă că scalarea și mentenanța poate implica anumite costuri.',
     'glossary.funnel': '<b>Pâlnia vibe-urilor</b> — o platformă destinată comunității de vibers. Este vorba despre contribuția la drumul necesar pentru a duce vibe-ul inițial până la o aplicație funcțională.',
-    'glossary.genai': '<b>Asistent de codare GenAI</b> — model de AI generativ capabil să genereze cod pe baza prompturilor viberilor.',
-    'glossary.prompt': '<b>Prompt</b> — cererea făcută de viber unui model GenAI pentru a produce sau modifica cod sursă.',
     'glossary.builder': '<b>Builder</b> — Viber cu abilități de dezvoltare software. Nu toți viberii sunt builderi, dar își pot dezvolta abilitățile pentru a deveni.',
     'glossary.scaler': '<b>Scaler</b> — Viber cu abilități avansate de dezvoltare software. Nu toți builderii sunt scaleri, dar își pot dezvolta abilitățile pentru a deveni.',
     'section.how': 'Cum funcționează',

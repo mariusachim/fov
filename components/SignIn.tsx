@@ -99,12 +99,6 @@ const SignIn: React.FC = () => {
                       {tr('glossary.funnel')}
                     </li>
                     <li>
-                      {tr('glossary.genai')}
-                    </li>
-                    <li>
-                      {tr('glossary.prompt')}
-                    </li>
-                    <li>
                       {tr('glossary.builder')}
                     </li>
                     <li>
