@@ -15,12 +15,14 @@ const AddAppModal: React.FC<AddAppModalProps> = ({ isOpen, onClose, onAdd }) => 
   const [description, setDescription] = useState('');
   const [zipFile, setZipFile] = useState<File | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsAnalyzing(true);
+    setUploadError(null);
 
     try {
       // AI Vibe Check
@@ -39,14 +41,41 @@ const AddAppModal: React.FC<AddAppModalProps> = ({ isOpen, onClose, onAdd }) => 
         stage: 'vibe' // Default stage for new apps
       };
 
-      if (zipFile) {
-        console.log(`Uploading ${zipFile.name} (${zipFile.size} bytes)...`);
+      if (!zipFile) throw new Error('No zip file selected');
+
+      // 1) Get the presigned URL and key from your endpoint
+      const endpointBase = 'https://kf86nl8rn5.execute-api.eu-north-1.amazonaws.com/Stage/signed-s3-url-for-vibe-upload';
+      const vibedApp = encodeURIComponent(name || 'unnamed');
+      const apiUrl = `${endpointBase}?vibed_app=${vibedApp}`;
+
+      const resp = await fetch(apiUrl);
+      if (!resp.ok) {
+        throw new Error(`Failed to get signed URL (${resp.status})`);
       }
+      const { url, key }: { url: string; key: string } = await resp.json();
+
+      console.log(`Uploading to S3 key: ${key}`);
+
+      // 2) Upload the local ZIP file using the presigned URL
+      const putRes = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/zip'
+        },
+        body: zipFile
+      });
+      if (!putRes.ok) {
+        // Attempt to read any error text for debugging
+        const errText = await putRes.text().catch(() => '');
+        throw new Error(`Upload failed (${putRes.status}): ${errText}`);
+      }
+      console.log('Upload complete');
 
       onAdd(newApp);
       handleClose();
     } catch (err) {
       console.error("Failed to add app", err);
+      setUploadError(err instanceof Error ? err.message : 'Upload failed');
     } finally {
       setIsAnalyzing(false);
     }
@@ -158,6 +187,9 @@ const AddAppModal: React.FC<AddAppModalProps> = ({ isOpen, onClose, onAdd }) => 
             </button>
           </div>
         </form>
+        {uploadError && (
+          <p className="mt-3 text-sm text-red-600" role="alert">{uploadError}</p>
+        )}
       </div>
     </div>,
     document.body
