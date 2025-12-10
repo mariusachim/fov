@@ -44,7 +44,7 @@ const AddAppModal: React.FC<AddAppModalProps> = ({ isOpen, onClose, onAdd }) => 
       if (!zipFile) throw new Error('No zip file selected');
 
       // 1) Get the presigned URL and key from your endpoint
-      const endpointBase = 'https://kf86nl8rn5.execute-api.eu-north-1.amazonaws.com/Stage/signed-s3-url-for-vibe-upload';
+      const endpointBase = 'https://hqyvtkj6j6.execute-api.eu-north-1.amazonaws.com/Stage/signed-s3-url-for-vibe-upload';
       const vibedApp = encodeURIComponent(name || 'unnamed');
       const apiUrl = `${endpointBase}?vibed_app=${vibedApp}`;
 
