@@ -153,7 +153,7 @@ const SignIn: React.FC = () => {
                   ].join(' ')}
                   style={{ fontFamily: 'Roboto, Arial, sans-serif' }}
                 >
-                  Submit Vibe
+                  {t('header.submit')}
                 </button>
 
                 {/* Vibe anonymously */}
