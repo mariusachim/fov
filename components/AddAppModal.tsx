@@ -104,9 +104,15 @@ const AddAppModal: React.FC<AddAppModalProps> = ({ isOpen, onClose, onAdd }) => 
               required
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                // Allow only alphanumeric characters (no spaces or symbols)
+                const sanitized = e.target.value.replace(/[^a-z0-9]/gi, '');
+                setName(sanitized);
+              }}
+              pattern="^[A-Za-z0-9]+$"
+              title="Only letters and numbers are allowed."
               className="w-full px-3 py-2 text-gray-900 bg-white border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-              placeholder="e.g. My Awesome App"
+              placeholder="e.g. MyAwesomeApp"
             />
           </div>
 
