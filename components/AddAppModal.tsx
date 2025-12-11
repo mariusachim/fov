@@ -17,6 +17,7 @@ const AddAppModal: React.FC<AddAppModalProps> = ({isOpen, onClose, onAdd}) => {
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [waitingMessage, setWaitingMessage] = useState<string | null>(null);
     const [uploadError, setUploadError] = useState<string | null>(null);
+    const [elapsedSec, setElapsedSec] = useState(0);
     const [availableUrl, setAvailableUrl] = useState<string | null>(null);
 
     if (!isOpen) return null;
@@ -104,15 +105,22 @@ const AddAppModal: React.FC<AddAppModalProps> = ({isOpen, onClose, onAdd}) => {
 
             // 3) After successful upload, poll the S3 website endpoint until it returns 200
             const s3DeployedVibeUrl = `http://${vibedApp}.agenticus.eu.s3-website.eu-north-1.amazonaws.com/`;
-            const waitingUrl = 'https://hqyvtkj6j6.execute-api.eu-north-1.amazonaws.com/Stage/wait-for-site-ready'
-            setWaitingMessage('Waiting for deployment to become available...');
-            const ok = await waitFor200(waitingUrl);
-            if (ok) {
-                // Make the URL available to the user as a clickable link instead of auto-opening
-                setAvailableUrl(s3DeployedVibeUrl);
-                setWaitingMessage(null);
-            } else {
-                setUploadError('Deployed site is not reachable yet. Please try opening it again in a little while.');
+            const waitingUrl = `https://hqyvtkj6j6.execute-api.eu-north-1.amazonaws.com/Stage/wait-for-site-ready?vibed_app=${vibedApp}`;
+            setWaitingMessage('Deploying vibe to AWS ...');
+            setElapsedSec(0);
+            let ticker: ReturnType<typeof setInterval> | null = null;
+            try {
+                ticker = setInterval(() => setElapsedSec((s) => s + 1), 1000);
+                const ok = await waitFor200(waitingUrl);
+                if (ok) {
+                    // Make the URL available to the user as a clickable link instead of auto-opening
+                    setAvailableUrl(s3DeployedVibeUrl);
+                    setWaitingMessage(null);
+                } else {
+                    setUploadError('Deployed site is not reachable yet. Please try opening it again in a little while.');
+                }
+            } finally {
+                if (ticker) clearInterval(ticker);
             }
         } catch (err) {
             console.error("Failed to add app", err);
@@ -120,6 +128,7 @@ const AddAppModal: React.FC<AddAppModalProps> = ({isOpen, onClose, onAdd}) => {
         } finally {
             setIsAnalyzing(false);
             setWaitingMessage(null);
+            setElapsedSec(0);
         }
     };
 
@@ -272,7 +281,9 @@ const AddAppModal: React.FC<AddAppModalProps> = ({isOpen, onClose, onAdd}) => {
                             <path className="opacity-75" fill="currentColor"
                                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
-                        {waitingMessage}
+                        <span>
+                          {waitingMessage} ({elapsedSec}s)
+                        </span>
                     </div>
                 )}
                 {uploadError && (
