@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CredentialResponse } from '@react-oauth/google';
 import { useI18n } from '../services/i18n';
 import AddAppModal from './AddAppModal';
@@ -72,6 +72,7 @@ const SignIn: React.FC = () => {
   return (
     <div className="min-h-screen w-full">
       <div className="mx-auto max-w-6xl px-4 py-8 sm:py-12">
+        {/* Support container extracted to global SupportHeader */}
         <div className="grid grid-cols-1 gap-6 items-stretch">
           {/* Info / Marketing Panel */}
           <div className="relative overflow-hidden rounded-2xl border border-white/40 bg-white/60 backdrop-blur shadow-md p-6 sm:p-8">

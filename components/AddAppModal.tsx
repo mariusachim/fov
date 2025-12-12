@@ -162,14 +162,14 @@ const AddAppModal: React.FC<AddAppModalProps> = ({isOpen, onClose, onAdd}) => {
                             type="text"
                             value={name}
                             onChange={(e) => {
-                                // Allow only alphanumeric characters (no spaces or symbols)
-                                const sanitized = e.target.value.replace(/[^a-z0-9]/gi, '');
+                                // Enforce lowercase and allow only lowercase alphanumeric characters (no spaces or symbols)
+                                const sanitized = e.target.value.toLowerCase().replace(/[^a-z0-9]/g, '');
                                 setName(sanitized);
                             }}
-                            pattern="^[A-Za-z0-9]+$"
-                            title="Only letters and numbers are allowed."
+                            pattern="^[a-z0-9]+$"
+                            title="Only lowercase letters and numbers are allowed."
                             className="w-full px-3 py-2 text-gray-900 bg-white border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-                            placeholder="e.g. MyAwesomeApp"
+                            placeholder="e.g. myawesomeapp"
                             disabled={isAnalyzing}
                         />
                     </div>
@@ -182,7 +182,7 @@ const AddAppModal: React.FC<AddAppModalProps> = ({isOpen, onClose, onAdd}) => {
                             onChange={(e) => setAuthor(e.target.value)}
                             disabled={isAnalyzing}
                             className="w-full px-3 py-2 text-gray-900 bg-white border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-                            placeholder="Your Name"
+                            placeholder="Optional"
                         />
                     </div>
 
@@ -194,7 +194,7 @@ const AddAppModal: React.FC<AddAppModalProps> = ({isOpen, onClose, onAdd}) => {
                             disabled={isAnalyzing}
                             className="w-full px-3 py-2 text-gray-900 bg-white border border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                             rows={3}
-                            placeholder="Describe your app..."
+                            placeholder="Optional"
                         />
                     </div>
 

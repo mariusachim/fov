@@ -4,6 +4,7 @@ import App from './App';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import SignIn from './components/SignIn';
 import { LanguageProvider } from './services/i18n';
+import SupportHeader from './components/SupportHeader';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -70,6 +71,7 @@ root.render(
   <React.StrictMode>
     <LanguageProvider>
       <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID || ''}>
+        <SupportHeader />
         <AuthGate />
       </GoogleOAuthProvider>
     </LanguageProvider>

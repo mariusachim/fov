@@ -220,6 +220,13 @@ const App: React.FC = () => {
         }
     }, [theme]);
 
+    // Listen for header request to open the Add App modal
+    useEffect(() => {
+        const openModal = () => setIsModalOpen(true);
+        window.addEventListener('open:add_app_modal', openModal as EventListener);
+        return () => window.removeEventListener('open:add_app_modal', openModal as EventListener);
+    }, []);
+
     const toggleTheme = () => setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
 
     const handleSignOut = () => {
@@ -327,10 +334,10 @@ const App: React.FC = () => {
     return (
         <div className="min-h-screen pb-20">
 
-            <div className="container mx-auto px-4 py-6 max-w-5xl">
+            <div className="container mx-auto px-4 py-6 max-w-6xl">
 
                 {/* Header & Nav */}
-                <header className="mb-6 relative">
+                <div className="mb-6 relative">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                         <div
                             className="pr-20 sm:pr-0"> {/* Add padding right on mobile to avoid overlap with funnel icon */}
@@ -340,89 +347,6 @@ const App: React.FC = () => {
                             <p className="text-sm text-gray-500">
                                 {t('app.subtitle')}
                             </p>
-                        </div>
-                        <div className="flex items-center gap-2 justify-end">
-                            {/* Language selector - single toggle button */}
-                            <div className="flex items-center gap-1 mr-2">
-                                <label className="sr-only">{t('header.language')}</label>
-                                {/* Globe icon to the left of the I18n toggle */}
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-globe w-4 h-4" aria-hidden="true">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
-                                    <path d="M2 12h20"></path>
-                                </svg>
-                                <button
-                                    className={[
-                                        'relative px-3 py-2 font-medium rounded-full transition-all duration-200',
-                                        'focus:outline-none focus:ring-2 focus:ring-offset-2',
-                                        'text-slate-600 bg-white/80 border border-slate-200 hover:bg-white shadow-sm hover:shadow',
-                                        'text-sm'
-                                    ].join(' ')}
-                                    onClick={() => setLang(lang === 'en' ? 'ro' : 'en')}
-                                    title={t('header.language')}
-                                >
-                                    {lang.toUpperCase()}
-                                </button>
-                            </div>
-                            {/* Theme toggle */}
-                            <button
-                                onClick={toggleTheme}
-                                className={[
-                                    'theme-toggle',
-                                    'relative px-3 py-2 font-medium rounded-full transition-all duration-200',
-                                    'focus:outline-none focus:ring-2 focus:ring-offset-2',
-                                    'text-slate-600 bg-white/80 border border-slate-200 hover:bg-white shadow-sm hover:shadow',
-                                    'text-sm'
-                                ].join(' ')}
-                                title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-                                aria-label="Toggle theme"
-                            >
-                                {theme === 'dark' ? (
-                                    <span className="inline-flex items-center gap-1">
-                                        {/* Moon icon */}
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
-                                        </svg>
-                                        Dark
-                                    </span>
-                                ) : (
-                                    <span className="inline-flex items-center gap-1">
-                                        {/* Sun icon */}
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zM1 13h3v-2H1v2zm10 10h2v-3h-2v3zm9-10v2h3v-2h-3zm-1.95 7.95l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM13 1h-2v3h2V1zm4.24 3.05l1.79-1.8-1.41-1.41-1.8 1.79 1.42 1.42zM4.22 18.36l-1.8 1.79 1.41 1.41 1.79-1.8-1.4-1.4z"/>
-                                            <circle cx="12" cy="12" r="5" />
-                                        </svg>
-                                        Light
-                                    </span>
-                                )}
-                            </button>
-                            {/* Sign Out button placed to the left of Submit */}
-                            <button
-                                onClick={handleSignOut}
-                                className={[
-                                    'relative px-3 py-2 font-medium rounded-full transition-all duration-200',
-                                    'focus:outline-none focus:ring-2 focus:ring-offset-2',
-                                    'text-slate-600 bg-white/80 border border-slate-200 hover:bg-white shadow-sm hover:shadow',
-                                    'text-sm'
-                                ].join(' ')}
-                                title={t('header.signout')}
-                            >
-                                {t('header.signout')}
-                            </button>
-                            <button
-                                onClick={() => setIsModalOpen(true)}
-                                className={
-                                    [
-                                        'relative px-4 py-2 font-medium rounded-full transition-all duration-200',
-                                        'focus:outline-none focus:ring-2 focus:ring-offset-2',
-                                        'disabled:opacity-50 disabled:cursor-not-allowed',
-                                        'text-white bg-gradient-to-r from-fuchsia-500 to-sky-500 shadow-md hover:shadow-lg focus:ring-fuchsia-400',
-                                        'text-sm'
-                                    ].join(' ')
-                                }
-                            >
-                                {t('header.submit')}
-                            </button>
                         </div>
                     </div>
 
@@ -453,7 +377,7 @@ const App: React.FC = () => {
                         <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">{t('skills.label')}</span>
                         <span className="text-sm font-medium text-slate-800">{stageSkills[activeTab]}</span>
                     </div>
-                </header>
+                </div>
 
                 {/* List - Compact Design */}
                 <div className="space-y-3">
