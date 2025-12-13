@@ -71,36 +71,25 @@ const SupportHeader: React.FC = () => {
     try { window.dispatchEvent(new Event('open:add_app_modal')); } catch {}
   };
 
+  const toggleScreens = () => {
+    if (isAuthed) {
+      // Currently on App (vibes list) -> go to Concept (SignIn)
+      goToConcept();
+    } else {
+      // Currently on SignIn -> go to Vibes List (App)
+      goToVibesRanking();
+    }
+  };
+
   return (
     <div className="w-full">
       <div className="mx-auto max-w-6xl px-4 py-3">
         <div className="flex items-center justify-end">
           <div id="support_container" className="flex items-center gap-2">
-            {/* Concept button - always visible, sends user to SignIn screen */}
+            {/* Toggle Screens button - replaces Concept and Vibes Ranking buttons */}
             <button
-              id="btnConcept"
-              onClick={goToConcept}
-              aria-pressed={!isAuthed}
-              className={[
-                'relative px-3 py-2 font-medium rounded-full transition-all duration-200',
-                'focus:outline-none focus:ring-2 focus:ring-offset-2',
-                'text-sm',
-                // Default visual
-                'bg-white/80 border shadow-sm hover:bg-white hover:shadow',
-                // Selected vs not selected styles
-                !isAuthed
-                  ? 'text-sky-700 border-sky-300 ring-sky-300 bg-sky-50'
-                  : 'text-slate-600 border-slate-200'
-              ].join(' ')}
-              title={t('header.signout')}
-            >
-              {t('header.signout')}
-            </button>
-            {/* Vibes Ranking button - always visible, sends user to App screen */}
-            <button
-              id="btnVibesRanking"
-              onClick={goToVibesRanking}
-              aria-pressed={isAuthed}
+              id="toggleScreens"
+              onClick={toggleScreens}
               className={[
                 'relative px-3 py-2 font-medium rounded-full transition-all duration-200',
                 'focus:outline-none focus:ring-2 focus:ring-offset-2',
@@ -110,9 +99,9 @@ const SupportHeader: React.FC = () => {
                   ? 'text-sky-700 border-sky-300 ring-sky-300 bg-sky-50'
                   : 'text-slate-600 border-slate-200'
               ].join(' ')}
-              title={t('header.votedVibes')}
+              title={isAuthed ? 'To Concept' : 'To Vibes List'}
             >
-              {t('header.votedVibes')}
+              {isAuthed ? 'To Concept' : 'To Vibes List'}
             </button>
             <button
               id="submitVibe"
