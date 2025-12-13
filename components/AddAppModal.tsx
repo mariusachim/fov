@@ -10,6 +10,7 @@ interface AddAppModalProps {
 }
 
 const AddAppModal: React.FC<AddAppModalProps> = ({isOpen, onClose, onAdd}) => {
+    const MAX_ZIP_BYTES = 300 * 1024; // 300 KB
     const [name, setName] = useState('');
     const [author, setAuthor] = useState('');
     const [description, setDescription] = useState('');
@@ -74,6 +75,9 @@ const AddAppModal: React.FC<AddAppModalProps> = ({isOpen, onClose, onAdd}) => {
             };
 
             if (!zipFile) throw new Error('No zip file selected');
+            if (zipFile.size > MAX_ZIP_BYTES) {
+                throw new Error(`Zip file is too large. Maximum allowed is 300 KB.`);
+            }
 
             // 1) Get the presigned URL and key from your endpoint
             const endpointBase = 'https://hqyvtkj6j6.execute-api.eu-north-1.amazonaws.com/Stage/signed-s3-url-for-vibe-upload';
@@ -204,7 +208,19 @@ const AddAppModal: React.FC<AddAppModalProps> = ({isOpen, onClose, onAdd}) => {
                             type="file"
                             accept=".zip"
                             required
-                            onChange={(e) => setZipFile(e.target.files ? e.target.files[0] : null)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                const file = e.target.files ? e.target.files[0] : null;
+                                if (file && file.size > MAX_ZIP_BYTES) {
+                                    // Too large — show error and reset selection
+                                    setUploadError('Zip file is too large. Maximum allowed is 300 KB.');
+                                    setZipFile(null);
+                                    // Reset the input value so user can re-select
+                                    e.target.value = '';
+                                    return;
+                                }
+                                setUploadError(null);
+                                setZipFile(file);
+                            }}
                             disabled={isAnalyzing}
                             className="block w-full text-sm text-gray-500
                 file:mr-4 file:py-2 file:px-4
@@ -214,6 +230,7 @@ const AddAppModal: React.FC<AddAppModalProps> = ({isOpen, onClose, onAdd}) => {
                 hover:file:bg-blue-100
               "
                         />
+                        <p className="mt-1 text-xs text-gray-500">Max size: 300 KB</p>
                         {zipFile && <p className="mt-1 text-xs text-green-600">Selected: {zipFile.name}</p>}
                     </div>
 
