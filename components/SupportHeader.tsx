@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { googleLogout } from '@react-oauth/google';
 import { useI18n } from '../services/i18n';
+import PublishGithubModal from './PublishGithubModal';
 
 const SupportHeader: React.FC = () => {
   const { t, lang, setLang } = useI18n();
@@ -21,6 +22,7 @@ const SupportHeader: React.FC = () => {
     } catch {}
     return 'light';
   });
+  const [isGithubModalOpen, setIsGithubModalOpen] = useState(false);
 
   useEffect(() => {
     try { localStorage.setItem('theme', theme); } catch {}
@@ -103,10 +105,11 @@ const SupportHeader: React.FC = () => {
             >
               {isAuthed ? t('header.toggler.concept') : t('header.toggler.votedVibes')}
             </button>
-            {/* Publish from Github button (no functionality yet) */}
+            {/* Publish from Github button */}
             <button
               id="publishGithub"
               type="button"
+              onClick={() => setIsGithubModalOpen(true)}
               className={
                 [
                   'relative px-4 py-2 font-medium rounded-full transition-all duration-200',
@@ -191,6 +194,10 @@ const SupportHeader: React.FC = () => {
           </div>
         </div>
       </div>
+      <PublishGithubModal
+        isOpen={isGithubModalOpen}
+        onClose={() => setIsGithubModalOpen(false)}
+      />
     </div>
   );
 };

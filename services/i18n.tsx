@@ -77,7 +77,12 @@ const translations: Record<Lang, Dict> = {
         'addModal.error.tooLarge': 'Zip file is too large. Maximum allowed is 1 MB.',
         'addModal.error.signedUrl': 'Failed to get upload URL. Please try again later.',
         'addModal.error.uploadFailed': 'Upload failed',
-        'addModal.error.siteNotReady': 'Deployed site is not reachable yet. Please try opening it again in a little while.'
+        'addModal.error.siteNotReady': 'Deployed site is not reachable yet. Please try opening it again in a little while.',
+        // PublishGithubModal
+        'githubModal.title': 'Publish from Github',
+        'githubModal.githubUrl': 'Public Github URL',
+        'githubModal.branch': 'Branch',
+        'githubModal.submit': 'Publish'
     },
     ro: {
         'app.title': 'Funnel of Vibes',
@@ -151,7 +156,12 @@ const translations: Record<Lang, Dict> = {
         'addModal.error.tooLarge': 'Fișierul zip este prea mare. Maxim permis este 1 MB.',
         'addModal.error.signedUrl': 'Nu s-a putut obține URL-ul de încărcare. Încearcă mai târziu.',
         'addModal.error.uploadFailed': 'Încărcarea a eșuat',
-        'addModal.error.siteNotReady': 'Site-ul publicat nu este încă accesibil. Încearcă din nou peste puțin timp.'
+        'addModal.error.siteNotReady': 'Site-ul publicat nu este încă accesibil. Încearcă din nou peste puțin timp.',
+        // PublishGithubModal
+        'githubModal.title': 'Publică din Github',
+        'githubModal.githubUrl': 'URL Github Public',
+        'githubModal.branch': 'Branch',
+        'githubModal.submit': 'Publică'
     },
 };
 
